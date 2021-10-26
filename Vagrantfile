@@ -47,4 +47,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
       end
     end # define
   end # cluster
+
+  config.vm.provision "shell", path: "provision/bootstrap.sh"
+
 end # vagrant
