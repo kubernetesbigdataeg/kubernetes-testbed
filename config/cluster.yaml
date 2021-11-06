@@ -7,20 +7,20 @@
 - name: k8s-master
   box: centos/7
   ip: 10.0.0.3
-  mem: 4096
+  mem: 8192
   cpu: 2
 - name: k8s-worker01
   box: centos/7
   ip: 10.0.0.4
-  mem: 4096
-  cpu: 1
+  mem: 8192
+  cpu: 2
   aditional_disk:
     - 10G
     - 10G
 - name: k8s-worker02
   box: centos/7
   ip: 10.0.0.5
-  mem: 4096
+  mem: 8192
   cpu: 2
   aditional_disk:
     - 10G
@@ -28,7 +28,7 @@
 - name: k8s-worker03
   box: centos/7
   ip: 10.0.0.6
-  mem: 4096
+  mem: 8192
   cpu: 2
   aditional_disk:
     - 10G
@@ -36,7 +36,7 @@
 - name: k8s-worker04
   box: centos/7
   ip: 10.0.0.7
-  mem: 4096
+  mem: 8192
   cpu: 2
   aditional_disk:
     - 10G

@@ -1,11 +1,7 @@
-sudo yum --quiet install \
-    vim \
-    tree \
-    bind-utils -y 2> /dev/null
-
 kernel_tunning() {
     OS=CentOS_7
     VERSION=1.22
+
     echo "kernel tunning"
 
     sudo setenforce 0
@@ -37,8 +33,14 @@ EOF
 
     sudo sysctl --system
 
-    sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/devel:kubic:libcontainers:stable.repo
-    sudo curl -L -o /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
+    sudo curl -L -o \
+        /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo \
+        https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/devel:kubic:libcontainers:stable.repo
+
+    sudo curl -L -o \
+        /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo \
+        https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
+
     sudo yum install cri-o -y -q
     sudo systemctl daemon-reload
     sudo systemctl enable crio --now
@@ -231,14 +233,24 @@ prepend domain-name-servers 10.0.0.2;
     sudo systemctl restart NetworkManager
 }
 
+install_packages() {
+    sudo yum --quiet install \
+        vim \
+        tree \
+        bind-utils -y 2> /dev/null
+}
+
 case $(hostname) in
   k8s-dns)
+    install_packages 
     bootstrap_dns
     ;;
   k8s-master)
+    install_packages 
     bootstrap_host master
     ;;
   k8s-worker*)
+    install_packages 
     bootstrap_host worker
     ;;
   *)
