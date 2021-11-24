@@ -2,7 +2,7 @@
 - name: k8s-dns
   box: centos/7
   ip: 10.0.0.2
-  mem: 512
+  mem: 4096
   cpu: 1
 - name: k8s-master
   box: centos/7
