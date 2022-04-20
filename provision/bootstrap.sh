@@ -1,6 +1,6 @@
 kernel_tunning() {
     OS=CentOS_7
-    VERSION=1.22
+    VERSION=1.23
 
     echo "kernel tunning"
 
@@ -66,10 +66,10 @@ bootstrap_dns() {
 
     HOST_DNS="$DNS.$DOMAIN"
     HOST_MASTER="$MASTER.$DOMAIN"
-    HOST_WOKER01="$WORKER01.$DOMAIN"
-    HOST_WOKER02="$WORKER02.$DOMAIN"
-    HOST_WOKER03="$WORKER03.$DOMAIN"
-    HOST_WOKER04="$WORKER04.$DOMAIN"
+    HOST_WORKER01="$WORKER01.$DOMAIN"
+    HOST_WORKER02="$WORKER02.$DOMAIN"
+    HOST_WORKER03="$WORKER03.$DOMAIN"
+    HOST_WORKER04="$WORKER04.$DOMAIN"
 
     # 10.0.0.0/24 10.0.0.255
     IP_DNS="10.0.0.2"
@@ -163,10 +163,10 @@ ${HOST_DNS}.   IN      A       ${IP_DNS}
 
 ; 10.0.0.0/24 - A records
 ${HOST_MASTER}.  IN A ${IP_MASTER}
-${HOST_WOKER01}.  IN A ${IP_WORKER01}
-${HOST_WOKER02}.  IN A ${IP_WORKER02}
-${HOST_WOKER03}.  IN A ${IP_WORKER03}
-${HOST_WOKER04}.  IN A ${IP_WORKER04}
+${HOST_WORKER01}.  IN A ${IP_WORKER01}
+${HOST_WORKER02}.  IN A ${IP_WORKER02}
+${HOST_WORKER03}.  IN A ${IP_WORKER03}
+${HOST_WORKER04}.  IN A ${IP_WORKER04}
 !
 
 sudo tee /etc/named/zones/db.${IP_REV} <<!
@@ -201,14 +201,17 @@ prepend domain-name-servers ${IP_DNS};
     echo "done."
 }
 
+#
+# To avoid GPG connection problems I have just disabled it
+#
 install_kubelet() {
     cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
 baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
 enabled=1
-gpgcheck=1
-repo_gpgcheck=1
+gpgcheck=0
+repo_gpgcheck=0
 gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 exclude=kubelet kubeadm kubectl
 EOF
@@ -237,6 +240,7 @@ install_packages() {
     sudo yum --quiet install \
         vim \
         tree \
+        nfs-utils\
         bind-utils -y 2> /dev/null
 }
 

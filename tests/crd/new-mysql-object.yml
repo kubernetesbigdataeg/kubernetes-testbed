@@ -1,0 +1,8 @@
+apiVersion: db.example.com/v1
+kind: MySql
+metadata:
+  name: wordpress
+spec:
+  user: wp
+  password: mierda
+  foo: bar

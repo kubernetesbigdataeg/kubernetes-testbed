@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod-volume
+spec:
+  containers:
+  - image: busybox
+    name: busybox-sleep
+    command: ['sh', '-c', 'sleep infinity']
+    volumeMounts:
+    - mountPath: /busybox-mount
+      name: myvolume
+  volumes:
+  - name: myvolume
+    hostPath:
+      path: /mnt
