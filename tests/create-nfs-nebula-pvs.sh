@@ -1,4 +1,4 @@
-for volume in {1..9}; do
+for volume in {1..20}; do
     cat <<! | kubectl apply -f -
 apiVersion: v1
 kind: PersistentVolume
@@ -10,7 +10,7 @@ spec:
     capacity:
         storage: 20Gi
     nfs:
-        server: k8s-dns.kubernetes.lan
+        server: k8s-nfs.node.keedio.cloud
         path: /opt/export/pv00${volume}
 !
 done

@@ -1,3 +1,5 @@
+sudo yum install rpcbind nfs-utilsnfs-utils  -y
+
 sudo mkdir -p /opt/export/pv00{1..9}
 
 for volume in pv00{1..9} ; do

@@ -1,6 +1,9 @@
 kernel_tunning() {
     OS=CentOS_7
-    VERSION=1.23
+    # CRI-O version
+    VERSION=1.24
+    # Kubeadm version
+    KUBEADM_VERSION=${VERSION}.4
 
     echo "kernel tunning"
 
@@ -33,6 +36,9 @@ EOF
 
     sudo sysctl --system
 
+    #
+    # CRI-O
+    #
     sudo curl -L -o \
         /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo \
         https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/devel:kubic:libcontainers:stable.repo
@@ -216,7 +222,10 @@ gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg https://packages.cl
 exclude=kubelet kubeadm kubectl
 EOF
 
-    sudo yum install -y -q kubelet kubeadm kubectl --disableexcludes=kubernetes
+    sudo yum install -y -q kubelet-${KUBEADM_VERSION} \
+        kubeadm-${KUBEADM_VERSION} \
+        kubectl-${KUBEADM_VERSION} \
+        --disableexcludes=kubernetes
 
     sudo systemctl enable --now kubelet
 }

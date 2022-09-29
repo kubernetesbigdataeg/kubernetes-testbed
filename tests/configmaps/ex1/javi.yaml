@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hdfs-config
+data:
+  hdfs-vars.env: |
+	export HADOOP__coresite__fs_default_name="hdfs://localhost:8020"
+	export HADOOP__coresite__fs_trash_interval="0"
+	export HADOOP__coresite__user_defined_allow="${USER}"
+	export HADOOP__coresite__hadoop_security_authentication="kerberos"
+	export HADOOP__hdfssite__dfs_name_dir="/var/local/hadoop/hdfs/name"
+	export HADOOP__hdfssite__dfs_data_dir="/var/local/hadoop/hdfs/data"
+	export HADOOP__hivesite__dfs_heartbeat_interval_1="3"
+	export HADOOP__hivesite__dfs_heartbeat_interval="3"
+	export HADOOP__hivesite__dfs_heartbeat_interval="3"
+
+./propgen --flag HADOOP --file /opt/hadoop/etc/hadoop/conf/core-site.xml
+./propgen --flag HADOOP --file /opt/hadoop/etc/hadoop/conf/hdfs-site.xml
+
+

@@ -4,5 +4,5 @@ metadata:
   name: wordpress
 spec:
   user: wp
-  password: mierda
+  password: hola
   foo: bar
