@@ -1,4 +1,4 @@
-kernel_tunning() {
+function kernel_tunning() {
     OS=CentOS_7
     # CRI-O version
     VERSION=1.24
@@ -48,11 +48,14 @@ EOF
         https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
 
     sudo yum install cri-o -y -q
+    sudo systemctl stop crio
+    sudo rm -fr /etc/cni/net.d/*
+    sudo systemctl restart crio
     sudo systemctl daemon-reload
     sudo systemctl enable crio --now
 }
 
-bootstrap_dns() {
+function bootstrap_dns() {
     echo "Kubernetes external DNS bootstrapping."
     echo "installing bind ..."
     sudo yum install bind -y --quiet 2> /dev/null
@@ -210,7 +213,7 @@ prepend domain-name-servers ${IP_DNS};
 #
 # To avoid GPG connection problems I have just disabled it
 #
-install_kubelet() {
+function install_kubelet() {
     cat <<EOF | sudo tee /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
@@ -230,14 +233,14 @@ EOF
     sudo systemctl enable --now kubelet
 }
 
-bootstrap_host() {
+function bootstrap_host() {
     echo "kubernetes host $1 bootstrapping."
     kernel_tunning
     install_dhclient
     install_kubelet
 }
 
-install_dhclient() {
+function install_dhclient() {
     sudo tee /etc/dhcp/dhclient.conf <<!
 # The custom DNS server IP
 prepend domain-name-servers 10.0.0.2;
@@ -245,12 +248,20 @@ prepend domain-name-servers 10.0.0.2;
     sudo systemctl restart NetworkManager
 }
 
-install_packages() {
+function install_packages() {
     sudo yum --quiet install \
         vim \
         tree \
         nfs-utils\
         bind-utils -y 2> /dev/null
+}
+
+function setup_local_storage() {
+	export DISK_UUID=$(hostname -s)
+	for i in $(seq 1 10); do
+    	sudo mkdir -p /mnt/${DISK_UUID}/vol${i} /mnt/disks/${DISK_UUID}_vol${i}
+    	sudo mount --bind /mnt/${DISK_UUID}/vol${i} /mnt/disks/${DISK_UUID}_vol${i}
+	done
 }
 
 case $(hostname) in
@@ -265,6 +276,7 @@ case $(hostname) in
   k8s-worker*)
     install_packages 
     bootstrap_host worker
+    setup_local_storage
     ;;
   *)
     echo "wtf!"
