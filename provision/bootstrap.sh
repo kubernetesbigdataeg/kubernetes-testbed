@@ -1,9 +1,15 @@
+VERSION=1.25
+KUBEADM_VERSION=${VERSION}.2
+OS=CentOS_7
+
+export VERSION OS KUBEADM_VERSION
+
 function kernel_tunning() {
-    OS=CentOS_7
+    #OS=CentOS_7
     # CRI-O version
-    VERSION=1.24
+    #VERSION=1.24
     # Kubeadm version
-    KUBEADM_VERSION=${VERSION}.4
+    #KUBEADM_VERSION=${VERSION}.4
 
     echo "kernel tunning"
 
