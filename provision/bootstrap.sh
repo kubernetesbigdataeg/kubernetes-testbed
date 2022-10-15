@@ -7,17 +7,16 @@
 # https://github.com/kubernetes/kubernetes/releases
 # https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
 
-# kubernetes Version
-VERSION=1.24
+# kubeadm version
+KUBEADM_VERSION=1.24.6
 
 # cri-o version
+CRIO_MAYOR_MINOR=1.24
+CRIO_PATCH_LEVEL=3
 OS=CentOS_7
-CRIO_VERSION=${VERSION}.3
+CRIO_VERSION=${CRIO_MAYOR_MINOR}.${CRIO_PATCH_LEVEL}
 
-# kubeadm version
-KUBEADM_VERSION=${VERSION}.6
-
-export OS VERSION KUBEADM_VERSION
+export KUBEADM_VERSION CRIO_MAYOR_MINOR CRIO_VERSION
 
 function kernel_tunning() {
     echo "kernel tunning"
@@ -60,7 +59,7 @@ EOF
 
     sudo curl -L -o \
         /etc/yum.repos.d/kubic-libcontainers-cri-o.repo \
-        https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/${VERSION}:/${CRIO_VERSION}/${OS}/devel:kubic:libcontainers:stable:cri-o:${VERSION}:${CRIO_VERSION}.repo
+        https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/${CRIO_MAYOR_MINOR}:/${CRIO_VERSION}/${OS}/devel:kubic:libcontainers:stable:cri-o:${CRIO_MAYOR_MINOR}:${CRIO_VERSION}.repo
 
     sudo yum install cri-o -y -q
     sudo systemctl stop crio
@@ -284,9 +283,7 @@ function setup_local_storage() {
 }
 
 function log() {
-    echo "##################################################"
-    echo .$1.
-    echo "##################################################"
+    echo "##################### .${1}."
 }
 
 case $(hostname) in
