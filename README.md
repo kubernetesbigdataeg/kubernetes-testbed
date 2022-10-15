@@ -24,7 +24,7 @@ https://github.com/kubernetes/kubernetes/releases
 Kubeadm is an "in-tree" development within kubernetes source code.
 https://github.com/kubernetes/kubernetes/tree/master/cmd/kubeadm
 
-## CRI: cri-o version
+## Container Runtime Interface (CRI): cri-o project
 
 The CRI-O container engine provides a stable, more secure, and performant 
 platform for running Open Container Initiative (OCI) compatible runtimes. 
@@ -56,7 +56,7 @@ applies to features which are independent from Kubernetes.
 
 
 
-## CNI: Flannel
+## Container Network Interface (CNI): flannel project
 
 In this lab we will use as CNI the Flannel project, the CNI is independent of 
 our tests in the first instance. However, we use this one for simplicity and we 
