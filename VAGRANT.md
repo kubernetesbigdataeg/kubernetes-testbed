@@ -10,7 +10,7 @@ This should allow users to execute vagrant with vagrant-libvirt without needing
 to deal with the compatibility issues, though you may need to extend the image 
 for your own needs should you make use of additional plugins.
 
-Long story short, put in your .bashrc this shell function:
+Long story short, put in your ```.bashrc``` this shell function:
 
 ```
 vagrant(){

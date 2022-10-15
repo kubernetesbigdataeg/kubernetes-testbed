@@ -1,16 +1,25 @@
-VERSION=1.25
-KUBEADM_VERSION=${VERSION}.2
-OS=CentOS_7
+#
+# VERSION NOTES:
+# For checking CRI-O available versions take a look to:
+# https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/
+#
+# For checking Kubeadm available versions take a look to:
+# https://github.com/kubernetes/kubernetes/releases
+# https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
 
-export VERSION OS KUBEADM_VERSION
+# kubernetes Version
+VERSION=1.24
+
+# cri-o version
+OS=CentOS_7
+CRIO_VERSION=${VERSION}.3
+
+# kubeadm version
+KUBEADM_VERSION=${VERSION}.6
+
+export OS VERSION KUBEADM_VERSION
 
 function kernel_tunning() {
-    #OS=CentOS_7
-    # CRI-O version
-    #VERSION=1.24
-    # Kubeadm version
-    #KUBEADM_VERSION=${VERSION}.4
-
     echo "kernel tunning"
 
     sudo setenforce 0
@@ -46,12 +55,12 @@ EOF
     # CRI-O
     #
     sudo curl -L -o \
-        /etc/yum.repos.d/devel:kubic:libcontainers:stable.repo \
+        /etc/yum.repos.d/kubic-libcontainers.repo \
         https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable/$OS/devel:kubic:libcontainers:stable.repo
 
     sudo curl -L -o \
-        /etc/yum.repos.d/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo \
-        https://download.opensuse.org/repositories/devel:kubic:libcontainers:stable:cri-o:$VERSION/$OS/devel:kubic:libcontainers:stable:cri-o:$VERSION.repo
+        /etc/yum.repos.d/kubic-libcontainers-cri-o.repo \
+        https://download.opensuse.org/repositories/devel:/kubic:/libcontainers:/stable:/cri-o:/${VERSION}:/${CRIO_VERSION}/${OS}/devel:kubic:libcontainers:stable:cri-o:${VERSION}:${CRIO_VERSION}.repo
 
     sudo yum install cri-o -y -q
     sudo systemctl stop crio
@@ -216,6 +225,10 @@ prepend domain-name-servers ${IP_DNS};
     echo "done."
 }
 
+function bootstrap_kerberos() {
+    sudo yum install krb5-server krb5-libs krb5-workstation -y
+}
+
 #
 # To avoid GPG connection problems I have just disabled it
 #
@@ -270,16 +283,26 @@ function setup_local_storage() {
 	done
 }
 
+function log() {
+    echo "##################################################"
+    echo .$1.
+    echo "##################################################"
+}
+
 case $(hostname) in
   k8s-dns)
+    log "WORKING IN $(hostname)"
     install_packages 
     bootstrap_dns
+    bootstrap_kerberos
     ;;
   k8s-master)
+    log "WORKING IN $(hostname)"
     install_packages 
     bootstrap_host master
     ;;
   k8s-worker*)
+    log "WORKING IN $(hostname)"
     install_packages 
     bootstrap_host worker
     setup_local_storage

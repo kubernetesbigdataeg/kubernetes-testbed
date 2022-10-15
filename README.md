@@ -65,4 +65,52 @@ will leave more sophisticated CNIs for future tests.
 kube-flannel.yaml has some features that aren't compatible with older versions 
 of Kubernetes, though flanneld itself should work with any version of Kubernetes.
 
+## Manual Steps
 
+```
+sudo kubeadm init \
+        --control-plane-endpoint=k8s-master.kubernetes.lan \
+        --upload-certs \
+        --apiserver-advertise-address=10.0.0.3 \
+        --pod-network-cidr 10.244.0.0/16
+```
+
+```
+sudo kubeadm join k8s-master.kubernetes.lan:6443 --token <TOKEN_GIVEN_IN_INIT> \
+        --discovery-token-ca-cert-hash <HASH_GIVEN_IN_INIT>
+```
+
+```
+kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml
+```
+
+```
+[root@k8s-master ~]# kubectl --kubeconfig /etc/kubernetes/admin.conf get nodes
+NAME                          STATUS   ROLES           AGE     VERSION
+k8s-master.kubernetes.lan     Ready    control-plane   7m22s   v1.24.6
+k8s-worker01.kubernetes.lan   Ready    <none>          5m30s   v1.24.6
+k8s-worker02.kubernetes.lan   Ready    <none>          5m3s    v1.24.6
+k8s-worker03.kubernetes.lan   Ready    <none>          4m39s   v1.24.6
+k8s-worker04.kubernetes.lan   Ready    <none>          4m15s   v1.24.6
+```
+
+```
+[root@k8s-master ~]# kubectl --kubeconfig /etc/kubernetes/admin.conf get pod -A
+NAMESPACE      NAME                                                READY   STATUS    RESTARTS   AGE
+kube-flannel   kube-flannel-ds-gvmjw                               1/1     Running   0          2m57s
+kube-flannel   kube-flannel-ds-hpjrt                               1/1     Running   0          2m57s
+kube-flannel   kube-flannel-ds-ppms7                               1/1     Running   0          2m57s
+kube-flannel   kube-flannel-ds-r6vzp                               1/1     Running   0          2m57s
+kube-flannel   kube-flannel-ds-wpkpt                               1/1     Running   0          2m57s
+kube-system    coredns-6d4b75cb6d-jnrrm                            1/1     Running   0          7m35s
+kube-system    coredns-6d4b75cb6d-qh7mj                            1/1     Running   0          7m35s
+kube-system    etcd-k8s-master.kubernetes.lan                      1/1     Running   0          7m49s
+kube-system    kube-apiserver-k8s-master.kubernetes.lan            1/1     Running   0          7m49s
+kube-system    kube-controller-manager-k8s-master.kubernetes.lan   1/1     Running   0          7m50s
+kube-system    kube-proxy-5xstz                                    1/1     Running   0          7m35s
+kube-system    kube-proxy-67zh7                                    1/1     Running   0          5m10s
+kube-system    kube-proxy-b645r                                    1/1     Running   0          5m34s
+kube-system    kube-proxy-mmx9w                                    1/1     Running   0          6m1s
+kube-system    kube-proxy-wjr5j                                    1/1     Running   0          4m46s
+kube-system    kube-scheduler-k8s-master.kubernetes.lan            1/1     Running   0          7m50s
+```
