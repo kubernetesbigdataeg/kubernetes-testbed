@@ -17,12 +17,28 @@
   aditional_disk:
     - 10G
     - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
 - name: k8s-worker02
   box: centos/7
   ip: 10.0.0.5
   mem: 8192
   cpu: 2
   aditional_disk:
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
     - 10G
     - 10G
 - name: k8s-worker03
@@ -33,11 +49,27 @@
   aditional_disk:
     - 10G
     - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
 - name: k8s-worker04
   box: centos/7
   ip: 10.0.0.7
   mem: 8192
   cpu: 2
   aditional_disk:
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
+    - 10G
     - 10G
     - 10G

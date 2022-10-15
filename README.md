@@ -124,3 +124,19 @@ kube-system    kube-scheduler-k8s-master.kubernetes.lan            1/1     Runni
 ## Setup Kubeconfig
 
 [kubeconfig multicluster setup](KUBECONFIG.md).
+
+## Postinstallation Steps
+
+```
+k apply -f provision/postinstall/localstorageclass.yaml
+```
+
+```
+$ sh provision/postinstall/check-pv-mounts.sh
+...
+local-pv-181d371d mount point /mnt/disks/k8s-worker03_vdg
+local-pv-1aab77a mount point /mnt/disks/k8s-worker02_vdh
+local-pv-1f754c41 mount point /mnt/disks/k8s-worker01_vdg
+local-pv-2438eead mount point /mnt/disks/k8s-worker02_vdg 
+...
+```

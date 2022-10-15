@@ -275,11 +275,13 @@ function install_packages() {
 }
 
 function setup_local_storage() {
-	export DISK_UUID=$(hostname -s)
-	for i in $(seq 1 10); do
-    	sudo mkdir -p /mnt/${DISK_UUID}/vol${i} /mnt/disks/${DISK_UUID}_vol${i}
-    	sudo mount --bind /mnt/${DISK_UUID}/vol${i} /mnt/disks/${DISK_UUID}_vol${i}
-	done
+    for i in $(lsblk -l | grep -v -E "vda|NAME" | cut -d' ' -f1); do 
+        DISK_UUID=$(hostname -s)
+        sudo mkfs.xfs /dev/$i
+        sudo mkdir -p /mnt/disks/${DISK_UUID}_${i}
+        sudo mount /dev/$i /mnt/disks/${DISK_UUID}_${i}
+        echo "/dev/$i /mnt/disks/${DISK_UUID}_${i} xfs rw,seclabel,relatime,attr2,inode64,noquota 0 0" | sudo tee -a /etc/fstab
+    done
 }
 
 function log() {
