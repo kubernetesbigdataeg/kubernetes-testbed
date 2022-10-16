@@ -14,9 +14,7 @@ Vagrant installation notes [here](VAGRANT.md).
 
 ## Kubeadm logical picture
 
-<p style="text-align:center;">
-<img src="img/kubeadm-landscape.png" width="70%">
-</p>
+<img src="img/kubeadm-landscape.png" width="70%" align="center">
 
 # Technology used in this testbed
 ## Kubeadm
