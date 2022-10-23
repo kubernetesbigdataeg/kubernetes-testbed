@@ -1,11 +1,14 @@
-sudo yum install rpcbind nfs-utilsnfs-utils  -y
+sudo yum install rpcbind nfs-utils  -y
 
-sudo mkdir -p /opt/export/pv00{1..9}
+#sudo mkdir -p /opt/export/pv00{1..9}
+#
+#for volume in pv00{1..9} ; do
+#   echo "/opt/export/${volume} 10.0.0.2/24(rw,sync,all_squash,no_wdelay)" | sudo tee -a /etc/exports;
+#done
 
-for volume in pv00{1..9} ; do
-    echo "/opt/export/${volume} 10.0.0.2/24(rw,sync,all_squash,no_wdelay)" | sudo tee -a /etc/exports;
-done
-
+sudo mkdir /mnt/export
+sudo chmod 777 /mnt/export
+echo "/mnt/export 10.0.0.2/24(rw,sync,all_squash,no_wdelay)" | sudo tee -a /etc/exports
 sudo systemctl start rpcbind nfs-server nfs-lock nfs-idmap
 sudo systemctl enable nfs-server 
 

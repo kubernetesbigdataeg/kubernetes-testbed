@@ -135,6 +135,8 @@ kube-system    kube-scheduler-k8s-master.kubernetes.lan            1/1     Runni
 
 ## Postinstallation Steps
 
+### Install Local Persistence Volume Static Provisioner
+
 ```
 k apply -f provision/postinstall/localstorageclass.yaml
 ```
@@ -148,3 +150,13 @@ local-pv-1f754c41 mount point /mnt/disks/k8s-worker01_vdg
 local-pv-2438eead mount point /mnt/disks/k8s-worker02_vdg 
 ...
 ```
+### Install Kubernetes NFS Subdir External Provisioner
+```
+k apply -f provision/postinstall/nfsremotestorageclass.yaml
+```
+
+```
+k apply -f provision/postinstall/test-nfs-pod.yaml
+```
+
+

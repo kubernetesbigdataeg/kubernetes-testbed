@@ -228,6 +228,14 @@ function bootstrap_kerberos() {
     sudo yum install krb5-server krb5-libs krb5-workstation -y
 }
 
+function bootstrap_nfs() {
+    sudo mkdir /mnt/export
+    sudo chmod 777 /mnt/export
+    echo "/mnt/export 10.0.0.2/24(rw,sync,all_squash,no_wdelay)" | sudo tee -a /etc/exports
+    sudo systemctl start rpcbind nfs-server nfs-lock nfs-idmap
+    sudo systemctl enable nfs-server 
+}
+
 #
 # To avoid GPG connection problems I have just disabled it
 #
@@ -271,6 +279,7 @@ function install_packages() {
         vim \
         tree \
         nfs-utils\
+        rpcbind \
         bind-utils -y 2> /dev/null
 }
 
@@ -293,6 +302,7 @@ case $(hostname) in
     log "WORKING IN $(hostname)"
     install_packages 
     bootstrap_dns
+    bootstrap_nfs
     bootstrap_kerberos
     ;;
   k8s-master)
