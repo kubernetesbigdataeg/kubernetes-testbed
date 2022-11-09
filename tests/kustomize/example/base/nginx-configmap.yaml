@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: index-html
+data:
+  index.html: |-
+    NGINX HELLO WORLD!
